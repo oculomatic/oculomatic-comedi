@@ -265,10 +265,8 @@ int rec_slider_max = 1;
 int rec_slider;
 int record_video;
 
-int centerx_slider = 0;
+int centerxy_slider = 0;
 int centerx = 0;
-
-int centery_slider = 0;
 int centery = 0;
 
 bool isDrawing = false;
@@ -321,21 +319,14 @@ void rec_trackbar(int,void*){
   record_video = (int) rec_slider;
 }
 
-void centerx_trackbar(int,void*){
-  if(centerx_slider == 0){
+void centerxy_trackbar(int,void*){
+  if(centerxy_slider == 0){
     center_offset_x = 0;
-  }
-  else if(centerx_slider == 1){
-    center_offset_x = xpos - cvFloor(0.5*max_rngx);
-  }
-}
-
-void centery_trackbar(int,void*){
-  if(centery_slider == 0){
     center_offset_y = 0;
   }
-  else if(centery_slider == 1){
-    center_offset_y = xpos - cvFloor(0.5*max_rngy);
+  else if(centerxy_slider == 1){
+    center_offset_x = xpos - cvFloor(0.5*max_rngx);
+    center_offset_y = ypos - cvFloor(0.5*max_rngy);
   }
 }
 
@@ -513,14 +504,6 @@ int main(){
   // Initialize variables for sliders
 
 
-  // Record video
-  record_video = 0;
-  rec_slider = 0;
-  rec_slider_max = 1;
-
-  centerx_slider = 0;
-  centery_slider = 0;
-
   // Set up window with ROI and offset
   Mat window;
 
@@ -569,6 +552,12 @@ int main(){
   min_inertia_slider = 100;
   min_inertia = 0.01;
 
+  record_video = 0;
+  rec_slider = 0;
+  rec_slider_max = 1;
+
+  centerxy_slider = 0;
+
   // make sliders
   createTrackbar("Min Threshold", "control", &min_threshold_slider,min_threshold_slider_max, min_threshold_trackbar);
   createTrackbar("Max Threshold", "control", &max_threshold_slider,max_threshold_slider_max, max_threshold_trackbar);
@@ -578,8 +567,7 @@ int main(){
   createTrackbar("Min Convexity", "control", &min_convexity_slider,min_convexity_slider_max, min_convexity_trackbar);
   createTrackbar("Min Inertia", "control", &min_inertia_slider,min_inertia_slider_max, min_inertia_trackbar);
   createTrackbar("Record","control",&rec_slider,rec_slider_max,rec_trackbar);
-  createTrackbar("center-x","control",&centerx_slider,1,centerx_trackbar);
-  createTrackbar("center-y","control",&centery_slider,1,centery_trackbar);
+  createTrackbar("center-XY","control",&centerxy_slider,1,centerxy_trackbar);
 
   char key = 0;
 
