@@ -322,11 +322,21 @@ void rec_trackbar(int,void*){
 }
 
 void centerx_trackbar(int,void*){
-  center_offset_x = xpos - cvFloor(0.5*max_rngx);
+  if(centerx_slider == 0){
+    center_offset_x = 0;
+  }
+  else if(centerx_slider == 1){
+    center_offset_x = xpos - cvFloor(0.5*max_rngx);
+  }
 }
 
 void centery_trackbar(int,void*){
-  center_offset_y = ypos - cvFloor(0.5*max_rngy);
+  if(centery_slider == 0){
+    center_offset_y = 0;
+  }
+  else if(centery_slider == 1){
+    center_offset_y = xpos - cvFloor(0.5*max_rngy);
+  }
 }
 
 // Main function:
@@ -625,8 +635,8 @@ int main(){
 
     if(keypoints.size() > 0){
       circle(m_with_keypoints,keypoints[0].pt,3,Scalar(255,0,0),-1,8,0);
-      xpos = ((keypoints[0].pt.x-200) / (xmax-400))*(float)max_rngx;
-      ypos = ((keypoints[0].pt.y-150) / (ymax-300))*(float)max_rngy;
+      xpos = ((keypoints[0].pt.x-180) / (xmax-360))*(float)max_rngx;
+      ypos = ((keypoints[0].pt.y-130) / (ymax-260))*(float)max_rngy;
       xpos = xpos - center_offset_x;
       ypos = ypos - center_offset_y;
     }
