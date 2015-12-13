@@ -265,6 +265,14 @@ int rec_slider_max = 1;
 int rec_slider;
 int record_video;
 
+int gainx_slider_max = 300;
+int gainx_slider;
+int gainx;
+
+int gainy_slider_max = 300;
+int gainy_slider;
+int gainy;
+
 int centerxy_slider = 0;
 int centerx = 0;
 int centery = 0;
@@ -317,6 +325,14 @@ void min_inertia_trackbar(int,void*){
 
 void rec_trackbar(int,void*){
   record_video = (int) rec_slider;
+}
+
+void gainx_trackbar(int,void*){
+  gainx = (int) gainx_slider;
+}
+
+void gainy_trackbar(int,void*){
+  gainy = (int) gainy_slider;
 }
 
 void centerxy_trackbar(int,void*){
@@ -556,6 +572,14 @@ int main(){
   rec_slider = 0;
   rec_slider_max = 1;
 
+  gainx_slider_max = 300;
+  gainx_slider = 160;
+  gainx = 160;
+
+  gainy_slider_max = 300;
+  gainy_slider = 160;
+  gainy = 160;
+
   centerxy_slider = 0;
 
   // make sliders
@@ -567,6 +591,8 @@ int main(){
   createTrackbar("Min Convexity", "control", &min_convexity_slider,min_convexity_slider_max, min_convexity_trackbar);
   createTrackbar("Min Inertia", "control", &min_inertia_slider,min_inertia_slider_max, min_inertia_trackbar);
   createTrackbar("Record","control",&rec_slider,rec_slider_max,rec_trackbar);
+  createTrackbar("Gain X","control",&gainx_slider,gainx_slider_max,gainx_trackbar);
+  createTrackbar("Gain Y","control",&gainy_slider,gainy_slider_max,gainy_trackbar);
   createTrackbar("center-XY","control",&centerxy_slider,1,centerxy_trackbar);
 
   char key = 0;
@@ -591,6 +617,9 @@ int main(){
     // convert to OpenCV Mat
     Mat image = Mat(rgbImage.GetRows(), rgbImage.GetCols(),CV_8UC3, rgbImage.GetData(),rowBytes);
     Mat image_mono = Mat(monoImage.GetRows(), monoImage.GetCols(),CV_8UC1, monoImage.GetData());
+    
+    cv::flip(image,image,0);
+    cv::flip(image_mono,image_mono,0);
 
     //tracking happens here
 
@@ -623,8 +652,8 @@ int main(){
 
     if(keypoints.size() > 0){
       circle(m_with_keypoints,keypoints[0].pt,3,Scalar(255,0,0),-1,8,0);
-      xpos = ((keypoints[0].pt.x-180) / (xmax-360))*(float)max_rngx;
-      ypos = ((keypoints[0].pt.y-130) / (ymax-260))*(float)max_rngy;
+      xpos = ((keypoints[0].pt.x-(xmax/2)) / (xmax-gainx))*(float)max_rngx;
+      ypos = ((keypoints[0].pt.y-(ymax/2)) / (ymax-gainy))*(float)max_rngy;
       xpos = xpos - center_offset_x;
       ypos = ypos - center_offset_y;
     }
